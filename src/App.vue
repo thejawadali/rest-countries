@@ -18,6 +18,11 @@
       "
     >
       <h1 class="inline text-lg font-bold">Countries Data</h1>
+
+      <!-- loading text -->
+
+      <h1 v-if="showLoader" class="text-lg tracking-widest font-semibold">Loading...</h1>
+
       <!-- Search -->
       <div
         class="
@@ -66,7 +71,7 @@
       <!-- Side Nav ends here -->
 
       <!-- Main Starts here -->
-      <div class="absolute left-40">
+      <div v-if="!showLoader" class="absolute left-40">
         <main
           v-if="countriesData.length > 0"
           class="p-10 flex flex-wrap gap-5 justify-center lg:justify-start"
@@ -99,6 +104,7 @@ const regions = [
   "Polar",
 ];
 
+const showLoader = ref(false)
 const countriesData = ref({} as any);
 const fetchedData = ref({} as any);
 const search = ref("");
@@ -131,9 +137,11 @@ function searchByRegion() {
 
 onMounted(async () => {
   try {
+    showLoader.value = true
     const { data } = await axios.get("https://restcountries.eu/rest/v2/all");
     fetchedData.value = data;
     countriesData.value = data;
+    showLoader.value = false
   } catch (error) {
     // Show Error Msg
     console.error(error);
