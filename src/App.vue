@@ -74,14 +74,15 @@ onMounted(async () => {
         left-0
         right-0
         z-20
-        px-8
+        px-2
+        sm:px-8
         shadow-xl shadow-lg shadow-gray-500
         flex
         justify-between
         items-center
       "
     >
-      <h1 class="inline text-lg font-bold">Countries Data</h1>
+      <h1 class="inline text-sm sm:text-lg font-bold">Countries Data</h1>
 
       <!-- loading text -->
 
@@ -89,6 +90,7 @@ onMounted(async () => {
 
       <!-- Search -->
       <div
+      v-if="!showLoader"
         class="
           bg-white
           border border-gray-300
@@ -117,7 +119,7 @@ onMounted(async () => {
 
     <div class="absolute top-14 left-0 right-0">
       <!-- Sidenav starts here -->
-      <aside class="h-screen fixed bg-gray-200 w-40 left-0 px-2">
+      <aside class="hidden h-screen sm:block fixed bg-gray-200 w-40 left-0 px-2">
         <div class="mt-4">
           <span class="text-gray-700">Select Region</span>
           <div class="mt-2 flex flex-col">
@@ -135,7 +137,8 @@ onMounted(async () => {
       <!-- Side Nav ends here -->
 
       <!-- Main Starts here -->
-      <div v-if="!showLoader" class="absolute left-40">
+      <!-- <div v-if="!showLoader" class="absolute left-40"> -->
+      <div v-if="!showLoader" class="absolute left-0 sm:left-40">
         <main
           v-if="countriesData.length > 0"
           class="p-10 flex flex-wrap gap-5 justify-center lg:justify-start"
