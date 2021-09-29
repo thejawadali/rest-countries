@@ -14,35 +14,32 @@
   >
     <img
       alt="flag photo"
-      :src="country.flag"
+      :src="country.flags.png"
       class="max-h-40 w-full object-cover border-b"
     />
-    <div class="bg-transparent w-full h-36 p-4">
-      <p class="text-gray-800 text-lg font-bold mb-2">{{ country.name }}</p>
+    <div class="bg-transparent w-full h-32 p-4">
+      <p class="text-gray-800 text-lg font-bold mb-2">{{ country.name.common }}</p>
       <p class="text-xs font-semibold">
-        Population:
-        <span class="font-normal text-gray-500">{{ country.population }}</span>
+        Area:
+        <span class="font-normal text-gray-500">{{ country.area }}</span>
       </p>
       <p class="text-xs font-semibold">
         Region:
         <span class="font-normal text-gray-500">{{ country.region }}</span>
       </p>
-      <p class="text-xs font-semibold">
+      <p v-if="country.capital" class="text-xs font-semibold">
         Capital:
-        <span class="font-normal text-gray-500">{{ country.capital }}</span>
+        <span class="font-normal text-gray-500">{{ country.capital[0] }}</span>
       </p>
-      <p v-if="country.borders.length > 0" class="text-xs font-semibold">
-        Neighbours:
+      <!-- <p v-if="country.languages" class="text-xs font-semibold">
+        Languages:
         <span
-          v-for="i in country.borders"
-          :key="i"
+          v-for="(value, key, index) in country.languages"
+          :key="index"
           class="font-normal text-gray-500"
-          >{{ i }},
+          >{{value}}, 
         </span>
-      </p>
-      <p v-else class="text-xs font-semibold">
-        No Neighbour
-      </p>
+      </p> -->
     </div>
   </div>
 </template>

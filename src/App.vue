@@ -1,3 +1,67 @@
+<script lang="ts" setup>
+import { onMounted, ref, watch } from "vue";
+import Country from "./components/Country.vue";
+import axios from "axios";
+import { lowerCase } from "lodash";
+
+const regions = [
+  "All",
+  "Asia",
+  "Europe",
+  "Oceania",
+  "Africa",
+  "Americas",
+  "Polar",
+];
+
+const showLoader = ref(false)
+const countriesData = ref([] as any);
+const fetchedData = ref([] as any);
+const search = ref("");
+const region = ref();
+
+// watch search value and load data accordingly
+watch(search, searchByName);
+
+// watcher on regions
+watch(region, searchByRegion);
+
+function searchByName() {
+  // filter data and show
+  countriesData.value = fetchedData.value;
+  countriesData.value = countriesData.value.filter((d: any) =>
+    lowerCase(d.name.common).includes(lowerCase(search.value))
+  );
+}
+
+function searchByRegion() {
+  countriesData.value = fetchedData.value;
+  if (region.value === "All") {
+    countriesData.value = fetchedData.value;
+    return;
+  }
+  countriesData.value = countriesData.value.filter(
+    (d: any) => lowerCase(d.region) == lowerCase(region.value)
+  );
+}
+
+onMounted(async () => {
+  try {
+    showLoader.value = true
+    const { data } = await axios.get("https://restcountries.com/v3.1/all");
+    fetchedData.value = data;
+    countriesData.value = data;
+    showLoader.value = false
+    
+  } catch (error) {
+    // Show Error Msg
+    console.error(error);
+  }
+});
+</script>
+
+
+
 <template>
   <div class="w-full h-screen bg-gray-50">
     <!-- Nav starts here -->
@@ -76,6 +140,9 @@
           v-if="countriesData.length > 0"
           class="p-10 flex flex-wrap gap-5 justify-center lg:justify-start"
         >
+          <!-- <Country
+            :country="countriesData[10]"
+          /> -->
           <Country
             v-for="country in countriesData"
             :key="country.name"
@@ -87,67 +154,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
-import Country from "./components/Country.vue";
-import axios from "axios";
-import { lowerCase } from "lodash";
-
-const regions = [
-  "All",
-  "Asia",
-  "Europe",
-  "Oceania",
-  "Africa",
-  "Americas",
-  "Polar",
-];
-
-const showLoader = ref(false)
-const countriesData = ref({} as any);
-const fetchedData = ref({} as any);
-const search = ref("");
-const region = ref();
-
-// watch search value and load data accordingly
-watch(search, searchByName);
-
-// watcher on regions
-watch(region, searchByRegion);
-
-function searchByName() {
-  // filter data and show
-  countriesData.value = fetchedData.value;
-  countriesData.value = countriesData.value.filter((d: any) =>
-    lowerCase(d.name).includes(lowerCase(search.value))
-  );
-}
-
-function searchByRegion() {
-  countriesData.value = fetchedData.value;
-  if (region.value === "All") {
-    countriesData.value = fetchedData.value;
-    return;
-  }
-  countriesData.value = countriesData.value.filter(
-    (d: any) => lowerCase(d.region) == lowerCase(region.value)
-  );
-}
-
-onMounted(async () => {
-  try {
-    showLoader.value = true
-    const { data } = await axios.get("https://restcountries.eu/rest/v2/all");
-    fetchedData.value = data;
-    countriesData.value = data;
-    showLoader.value = false
-  } catch (error) {
-    // Show Error Msg
-    console.error(error);
-  }
-});
-</script>
-
-<style>
-</style>
